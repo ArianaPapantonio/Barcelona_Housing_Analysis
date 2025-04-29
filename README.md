@@ -1,4 +1,4 @@
-# Barcelona_Housing_Analysis
+# Barcelona Housing Analysis
 
 ## 🧼 Data Cleaning Summary
 
