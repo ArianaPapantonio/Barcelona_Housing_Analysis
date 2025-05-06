@@ -124,8 +124,6 @@ The final visualization was created in **Tableau Public**, using the cleaned dat
 
 ### 🖼️ Preview:
 
-You can optionally add a preview image with this Markdown line (replace `dashboard_preview.png` with your image file path):
+![Barcelona Housing Dashboard](Images/Tableau_dashboard.png)
 
-```md
-![Barcelona Housing Dashboard](images/Tableau_dashboard.png)
 
