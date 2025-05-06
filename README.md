@@ -10,7 +10,7 @@ The dataset was imported and cleaned in **Google Sheets**, using a structured ap
 - **Cleaned_Data**: Final cleaned dataset, ready for SQL/Tableau analysis
 
 ### 🔍 Cleaning Steps Performed:
-- ✅ **Removed 2 empty rows** from the bottom of the dataset
+- ✅ Removed 2 empty rows from the bottom of the dataset
 - ✅ Created a cleaning summary including:
   - Null values per column
   - Count of unique values
@@ -22,3 +22,110 @@ The dataset was imported and cleaned in **Google Sheets**, using a structured ap
 - ✅ Created new tab `Cleaned_Data` with all transformations applied using `ARRAYFORMULA`
 
 The cleaned dataset was then exported as `.csv` and is ready for SQL import and further visualization in Tableau.
+
+## 🧠 SQL-Based Data Analysis
+
+After cleaning the dataset in Google Sheets, the final `.csv` file (`Barcelona_Housing_Prices_2020`) was exported and imported into **MySQL** to perform structured SQL analysis.
+
+This allowed us to:
+- Aggregate housing data by neighborhood, district, and property characteristics
+- Calculate price-related metrics (e.g., average price, price per m²)
+- Derive insights used directly in the Tableau visualizations
+
+The full set of queries used is available in [`Analysis/housing_queries.sql`](./Analysis/housing_queries.sql).
+
+### 🔍 Example Queries
+
+#### 🔹 Most & Least Expensive Neighborhoods per District
+
+Calculates the most and least expensive neighborhoods by average price within each district using window functions.
+
+```sql
+SELECT
+    district,
+    MAX(CASE WHEN avg_price = max_price THEN neighborhood END) AS most_expensive_neighborhood,
+    MAX(CASE WHEN avg_price = max_price THEN avg_price END) AS most_expensive_avg_price,
+    MAX(CASE WHEN avg_price = min_price THEN neighborhood END) AS least_expensive_neighborhood,
+    MAX(CASE WHEN avg_price = min_price THEN avg_price END) AS least_expensive_avg_price
+FROM (
+    SELECT 
+        district,
+        neighborhood,
+        ROUND(AVG(price)) AS avg_price,
+        MAX(ROUND(AVG(price))) OVER (PARTITION BY district) AS max_price,
+        MIN(ROUND(AVG(price))) OVER (PARTITION BY district) AS min_price
+    FROM housing_data
+    GROUP BY district, neighborhood
+) ranked
+GROUP BY district
+ORDER BY district;
+ ```
+
+#### 🔹 Elevator Access Rate by District and City
+
+Calculates the percentage of listings with elevator access per district and overall for the city
+
+```sql
+
+SELECT
+    district,
+    ROUND(SUM(CASE WHEN lift = 'Yes' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 1) AS percent_with_lift
+FROM housing_data
+GROUP BY district
+
+UNION
+
+SELECT
+    'Barcelona' AS district,
+    ROUND(SUM(CASE WHEN lift = 'Yes' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 1)
+FROM housing_data;
+ ```
+
+#### 🔹 Price per Square Meter by Property Condition
+
+Uses a CTE to calculate the average price per square meter by property condition.
+```sql
+
+WITH price_per_m2 AS (
+    SELECT *, 
+           ROUND(price / area_m2, 2) AS ppm2
+    FROM housing_data
+    WHERE area_m2 > 0
+)
+SELECT 
+    `condition`,
+    COUNT(*) AS listings,
+    ROUND(AVG(ppm2), 2) AS avg_price_per_m2
+FROM price_per_m2
+GROUP BY `condition`
+ORDER BY avg_price_per_m2 DESC;
+```
+
+## 📊 Tableau Dashboard
+
+The final visualization was created in **Tableau Public**, using the cleaned dataset imported from SQL. The dashboard provides an interactive view of housing listings across Barcelona's districts.
+
+### 🔗 [View the Dashboard on Tableau Public](https://public.tableau.com/app/profile/ariana.papantonio3710/viz/Barcelona_housing/Barcelona_Housing)
+
+### 🗺️ Dashboard Features:
+
+- **Interactive Map**: View individual listings by location, with hover tooltips showing key details.
+- **KPIs**: Summary cards displaying:
+  - Average price
+  - Average area
+  - Total listings
+- **Bar Charts**:
+  - Distribution of listings by number of rooms
+- **Donut Charts**:
+  - Elevator access availability
+  - House condition
+- **Filters**:
+  - Clickable district names allow users to explore and filter all dashboard components by area
+
+### 🖼️ Preview:
+
+You can optionally add a preview image with this Markdown line (replace `dashboard_preview.png` with your image file path):
+
+```md
+![Barcelona Housing Dashboard](images/Tableau_dashboard.png)
+
