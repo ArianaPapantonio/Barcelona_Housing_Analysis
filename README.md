@@ -1,4 +1,26 @@
-# Barcelona Housing Analysis
+# 🏡 Barcelona Housing Analysis
+
+This project explores housing listings across the city of **Barcelona**, using a dataset from Idealista scraped in 2020. The goal is to clean, analyze, and visualize property data to uncover insights about **prices, property characteristics, and geographic distribution**.
+
+- 📍 **Objective**: To analyze housing trends by neighborhood and district, and present an interactive dashboard to explore market characteristics.
+
+## 🛠 Tools & Technologies
+
+| Tool             | Purpose                                      |
+|------------------|----------------------------------------------|
+| **Google Sheets** | Data cleaning, transformation & validation  |
+| **MySQL**         | Structured analysis and aggregations         |
+| **Tableau Public** | Interactive data visualization              |
+| **Kaggle**        | Data source (Barcelona Idealista Listings)   |
+
+## 🗂️ Project Structure
+
+| Folder / File              | Description                                      |
+|---------------------------|--------------------------------------------------|
+| `Data/`                   | Contains the cleaned dataset in `.csv` format   |
+| `Analysis/`               | SQL script with all queries used for analysis   |
+| `Images/`                 | Visual assets, including the dashboard preview  |
+| `README.md`               | Full project documentation (this file)          |
 
 ## 🧼 Data Cleaning Summary
 
@@ -125,5 +147,15 @@ The final visualization was created in **Tableau Public**, using the cleaned dat
 ### 🖼️ Preview:
 
 ![Barcelona Housing Dashboard](Images/Tableau_dashboard.png)
+
+## 💡 Key Insights
+
+Here are some of the main takeaways from the analysis:
+
+- 💰 **Most expensive listings** are located in **Sarrià-Sant Gervasi** and **Les Corts**.
+- 🏢 **Elevator access** is available in over **80% of listings**, with some variance by district.
+- 🛏️ The majority of listings have **2 to 4 rooms**, with **3-room homes** being the most common.
+- 🧱 Properties in **good condition** represent over **40%** of the market.
+- 📈 There are clear price variations between neighborhoods, even within the same district.
 
 
